@@ -1,0 +1,45 @@
+From d5f19e0111da9fafa1e24f7bb18e52f4adf192fc Mon Sep 17 00:00:00 2001
+From: wuxianlin <wuxianlinwxl@gmail.com>
+Date: Sun, 31 May 2020 15:33:13 +0800
+Subject: [PATCH] fix flowdroid develop version build
+
+---
+ .../components/AbstractComponentEntryPointCreator.java        | 2 +-
+ soot-infoflow/pom.xml                                         | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/soot-infoflow-android/src/soot/jimple/infoflow/android/entryPointCreators/components/AbstractComponentEntryPointCreator.java b/soot-infoflow-android/src/soot/jimple/infoflow/android/entryPointCreators/components/AbstractComponentEntryPointCreator.java
+index a0caf77..4320f9e 100644
+--- a/soot-infoflow-android/src/soot/jimple/infoflow/android/entryPointCreators/components/AbstractComponentEntryPointCreator.java
++++ b/soot-infoflow-android/src/soot/jimple/infoflow/android/entryPointCreators/components/AbstractComponentEntryPointCreator.java
+@@ -230,7 +230,7 @@ public abstract class AbstractComponentEntryPointCreator extends AbstractAndroid
+ 				continue;
+ 
+ 			InvokeExpr iexpr = stmt.getInvokeExpr();
+-			if (iexpr.getMethodRef().isConstructor())
++			if (iexpr.getMethod().isConstructor())
+ 				continue;
+ 
+ 			List<Type> types = stmt.getInvokeExpr().getMethod().getParameterTypes();
+diff --git a/soot-infoflow/pom.xml b/soot-infoflow/pom.xml
+index cd58780..e346455 100644
+--- a/soot-infoflow/pom.xml
++++ b/soot-infoflow/pom.xml
+@@ -143,12 +143,12 @@
+ 		<dependency>
+ 			<groupId>de.upb.cs.swt</groupId>
+ 			<artifactId>heros</artifactId>
+-			<version>1.2.0-SNAPSHOT</version>
++			<version>1.2.0</version>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>ca.mcgill.sable</groupId>
+ 			<artifactId>soot</artifactId>
+-			<version>4.1.0-SNAPSHOT</version>
++			<version>4.1.0</version>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>junit</groupId>
+-- 
+2.17.1
+
