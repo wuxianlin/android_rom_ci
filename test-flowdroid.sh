@@ -13,7 +13,7 @@ rm rom.ozip
 rm -r out/rom
 
 ROM=out/rom-deodexed
-for apk in `find $ROM/system/app -name *.apk`;do
+for apk in `find $ROM -name *.apk`;do
 	echo "---- start test $apk ----"
 	apkfolder="$(dirname $apk)"
 	filenum=`find $apkfolder -name *.apk -o -name *.jar | wc -l`

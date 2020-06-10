@@ -44,21 +44,22 @@ jobs:
         ./setup.sh ${{ secrets.GITHUB_TOKEN }}
         python -m pip install --upgrade pip
         if [ -f main/requirements.txt ]; then pip install -r main/requirements.txt; fi
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Build
       run: |
         git config --global user.email "noreply@github.com"
         git config --global user.name "GitHub Action"
-        cd FlowDroid
-        git apply --check ../main/0001-fix-flowdroid-develop-version-build.patch && git am ../main/0001-fix-flowdroid-develop-version-build.patch
-        mvn -DskipTests install
+        #cd FlowDroid
+        #git apply --check ../main/0001-fix-flowdroid-develop-version-build.patch && git am ../main/0001-fix-flowdroid-develop-version-build.patch
+        #mvn -DskipTests install
 
     - name: Run
       run: |
-        bash main/test-flowdroid.sh
+        bash main/test-jadx.sh
 
     - uses: actions/upload-artifact@v2
       with:
-        name: flowdroidtest
-        path: flowdroidtest/
+        name: decompiled-jadx
+        path: out/rom-decompiled-jadx/
 
