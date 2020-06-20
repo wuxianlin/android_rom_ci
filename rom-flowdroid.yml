@@ -21,19 +21,12 @@ jobs:
       with:
         path: main
 
-    - name: Checkout CryptoAnalysis
+    - name: Checkout FlowDroid
       uses: actions/checkout@v2
       with:
-        repository: CROSSINGTUD/CryptoAnalysis
+        repository: secure-software-engineering/FlowDroid
         ref: develop
-        path: CryptoAnalysis
-
-    - name: Checkout Crypto-API-Rules
-      uses: actions/checkout@v2
-      with:
-        repository: CROSSINGTUD/Crypto-API-Rules
-        ref: master
-        path: Crypto-API-Rules
+        path: FlowDroid
 
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
@@ -55,15 +48,19 @@ jobs:
 
     - name: Build
       run: |
-        cd CryptoAnalysis
-        mvn package -DskipTests=true
+        git config --global user.email "noreply@github.com"
+        git config --global user.name "GitHub Action"
+        cd FlowDroid
+        git apply --check ../main/0001-fix-flowdroid-develop-version-build.patch && git am ../main/0001-fix-flowdroid-develop-version-build.patch
+        mvn -DskipTests install
 
     - name: Run
       run: |
-        bash main/test-cryptoanalysis.sh
+        bash main/test-flowdroid.sh
 
     - uses: actions/upload-artifact@v2
       with:
-        name: cryptoanalysistest
-        path: cryptoanalysistest/
+        name: flowdroidtest
+        path: flowdroidtest/
+
 
