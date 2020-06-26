@@ -21,6 +21,13 @@ jobs:
       with:
         path: main
 
+    - name: Checkout FlowDroid
+      uses: actions/checkout@v2
+      with:
+        repository: secure-software-engineering/FlowDroid
+        ref: develop
+        path: FlowDroid
+
     - name: Checkout CryptoAnalysis
       uses: actions/checkout@v2
       with:
@@ -53,9 +60,21 @@ jobs:
         if [ -f main/requirements.txt ]; then pip install -r main/requirements.txt; fi
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
     - name: Build
       run: |
+        #cd FlowDroid
+        #mvn -DskipTests install -e -X
+        #cd ..
         cd CryptoAnalysis
+        #sed -i "s/flowDroidVersion>2.7.1</flowDroidVersion>2.7.3-SNAPSHOT</g" CryptoAnalysis-Android/pom.xml
         mvn package -DskipTests=true
 
     - name: Run
