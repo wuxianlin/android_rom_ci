@@ -12,14 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
+
     - name: Checkout tools repo
       uses: actions/checkout@v2
       with:
+        path: tools
         repository: wuxianlin/android_rom_tools
-
-    - uses: actions/checkout@v2
-      with:
-        path: main
 
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
@@ -34,14 +33,14 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get install axel brotli maven
-        ./setup.sh ${{ secrets.GITHUB_TOKEN }}
+        ./tools/setup.sh ${{ secrets.GITHUB_TOKEN }}
         python -m pip install --upgrade pip
-        if [ -f main/requirements.txt ]; then pip install -r main/requirements.txt; fi
+        if [ -f tools/requirements.txt ]; then pip install -r tools/requirements.txt; fi
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Run
       run: |
-        bash main/test-jadx.sh
+        bash test-jadx.sh
 
     - uses: actions/upload-artifact@v2
       with:

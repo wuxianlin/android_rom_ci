@@ -8,7 +8,7 @@ python ozipdecrypt.py rom.ozip
 
 rm rom.ozip
 
-./rom.sh rom.zip out
+./tools/rom.sh rom.zip out
 
 rm -r out/rom
 
