@@ -20,27 +20,6 @@ jobs:
         path: tools
         repository: wuxianlin/android_rom_tools
 
-    - name: Checkout FlowDroid
-      uses: actions/checkout@v2
-      with:
-        repository: secure-software-engineering/FlowDroid
-        ref: develop
-        path: FlowDroid
-
-    - name: Checkout CryptoAnalysis
-      uses: actions/checkout@v2
-      with:
-        repository: CROSSINGTUD/CryptoAnalysis
-        ref: develop
-        path: CryptoAnalysis
-
-    - name: Checkout Crypto-API-Rules
-      uses: actions/checkout@v2
-      with:
-        repository: CROSSINGTUD/Crypto-API-Rules
-        ref: master
-        path: Crypto-API-Rules
-
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -59,29 +38,16 @@ jobs:
         if [ -f tools/requirements.txt ]; then pip install -r tools/requirements.txt; fi
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Cache local Maven repository
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
-
-    - name: Build
+    - name: Install mariana-trench
       run: |
-        #cd FlowDroid
-        #mvn -DskipTests install -e -X
-        #cd ..
-        cd CryptoAnalysis
-        #sed -i "s/flowDroidVersion>2.7.1</flowDroidVersion>2.7.3-SNAPSHOT</g" CryptoAnalysis-Android/pom.xml
-        mvn package -DskipTests=true
+        pip install mariana-trench
 
     - name: Run
       run: |
-        bash test-cryptoanalysis.sh
+        bash test-mariana-trench.sh
 
     - uses: actions/upload-artifact@v2
       with:
-        name: cryptoanalysistest
-        path: cryptoanalysistest/
+        name: result
+        path:  ~/*.json
 
