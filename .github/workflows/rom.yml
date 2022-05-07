@@ -38,9 +38,33 @@ jobs:
         if [ -f tools/requirements.txt ]; then pip install -r tools/requirements.txt; fi
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Install mariana-trench
+    - name: Install dependencies for Mariana Trench
       run: |
-        pip install mariana-trench
+        brew install cmake zlib boost jsoncpp fmt re2 git
+        brew install googletest --build-from-source
+        sudo apt update
+        sudo apt install default-jre default-jdk
+
+    - name: Install Redex and build Mariana Trench
+      run: |
+        git clone --depth 1 https://github.com/facebook/mariana-trench
+        cd mariana-trench
+        git apply ../patches/mariana-trench.diff
+        export CMAKE_PREFIX_PATH=/home/linuxbrew/.linuxbrew/opt/jsoncpp:/home/linuxbrew/.linuxbrew/opt/zlib
+        git clone --depth 1 https://github.com/facebook/redex
+        cd redex
+        git apply ../../patches/redex.diff
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX="../install" ..
+        make -j$(nproc)
+        make install
+        cd ../..
+        mkdir build
+        cd build
+        cmake -DREDEX_ROOT="../redex/install" -DCMAKE_INSTALL_PREFIX="../install" ..
+        make -j$(nproc)
+        make install
 
     - name: Run
       run: |
@@ -49,5 +73,5 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: result
-        path:  ~/*.json
+        path:  test/
 

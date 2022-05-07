@@ -1,0 +1,14 @@
+diff --git a/libredex/DexLoader.cpp b/libredex/DexLoader.cpp
+index 8511b98..d6be55b 100644
+--- a/libredex/DexLoader.cpp
++++ b/libredex/DexLoader.cpp
+@@ -33,6 +33,9 @@ static void validate_dex_header(const dex_header* dh,
+                                 int support_dex_version) {
+   bool supported = false;
+   switch (support_dex_version) {
++  case 39:
++    supported = supported ||
++                !memcmp(dh->magic, DEX_HEADER_DEXMAGIC_V39, sizeof(dh->magic));
+   case 38:
+     supported = supported ||
+                 !memcmp(dh->magic, DEX_HEADER_DEXMAGIC_V38, sizeof(dh->magic));
