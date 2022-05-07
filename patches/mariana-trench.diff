@@ -1,3 +1,18 @@
+diff --git a/scripts/build_static_binary.py b/scripts/build_static_binary.py
+index 0da84a2..a033629 100755
+--- a/scripts/build_static_binary.py
++++ b/scripts/build_static_binary.py
+@@ -333,6 +333,10 @@ def _build_redex(
+         ["git", "clone", "--depth=1", REDEX_URL, redex_build_directory.name],
+         cwd=redex_build_directory.parent,
+     )
++    _run(
++        ["git", "apply", str(Path.cwd() / "../patches/redex.diff")],
++        cwd=redex_build_directory,
++    )
+     redex_build_directory /= "build"
+     redex_build_directory.mkdir()
+     _run(
 diff --git a/source/MarianaTrench.cpp b/source/MarianaTrench.cpp
 index a4ec76b..397cb40 100644
 --- a/source/MarianaTrench.cpp

@@ -40,38 +40,30 @@ jobs:
 
     - name: Install dependencies for Mariana Trench
       run: |
-        brew install cmake zlib boost jsoncpp fmt re2 git
-        brew install googletest --build-from-source
-        sudo apt update
-        sudo apt install default-jre default-jdk
+        sudo apt-get install meson
 
     - name: Install Redex and build Mariana Trench
       run: |
         git clone --depth 1 https://github.com/facebook/mariana-trench
         cd mariana-trench
         git apply ../patches/mariana-trench.diff
-        export CMAKE_PREFIX_PATH=/home/linuxbrew/.linuxbrew/opt/jsoncpp:/home/linuxbrew/.linuxbrew/opt/zlib
         git clone --depth 1 https://github.com/facebook/redex
         cd redex
         git apply ../../patches/redex.diff
-        mkdir build
-        cd build
-        cmake -DCMAKE_INSTALL_PREFIX="../install" ..
-        make -j$(nproc)
-        make install
-        cd ../..
-        mkdir build
-        cd build
-        cmake -DREDEX_ROOT="../redex/install" -DCMAKE_INSTALL_PREFIX="../install" ..
-        make -j$(nproc)
-        make install
+        cd ..
+        ./scripts/build_static_binary.py --jobs=$(nproc)
+        ./scripts/setup.py --version 1 --binary mariana-trench-binary --pyredex redex/pyredex build
+        ./scripts/setup.py --binary mariana-trench-binary --pyredex redex/pyredex install
+        cd ..
+        rm -rf mariana-trench
 
     - name: Run
       run: |
         bash test-mariana-trench.sh
+        tar cvfz test.tar.gz test
 
     - uses: actions/upload-artifact@v2
       with:
         name: result
-        path:  test/
+        path:  test.tar.gz
 
